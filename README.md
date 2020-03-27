@@ -1,6 +1,15 @@
 Scrapy Accessory
 ================
 
+# Introduction
+
+Useful accessory utilities for [Scrapy](https://scrapy.org/).
+
+Containing:
+
+- middleware
+- feed exporter storage backend
+
 # Installation
 
 ```
@@ -9,7 +18,9 @@ pip install scrapy-accessory
 
 # Usage
 
-## RandomUserAgentDownloadMiddleware
+## Middleware
+
+### RandomUserAgentDownloadMiddleware
 
 Add random user-agent to requests.
 
@@ -31,7 +42,7 @@ You can use either `USER_AGENT_LIST_FILE` or `USER_AGENT_LIST` to configure user
 `USER_AGENT_LIST_FILE` points to a text file containing one user-agent per line.
 `USER_AGENT_LIST` is a list or tuple of user-agents.
 
-## ProxyDownloadMiddleware
+### ProxyDownloadMiddleware
 
 Add http or https proxy for requests.
 
@@ -61,3 +72,51 @@ class DynamicProxyDownloadMiddleware(ProxyDownloadMiddleware):
             return res.text  # return format <ip>:<port>
         return None
 ```
+
+## Feed exporter storage backend
+
+### ObsFeedStorage
+
+Feed exporter storage backend for huawei cloud OBS.
+
+Install obs sdk first
+
+```
+pip install esdk-obs-python
+```
+
+Configure in settings.py
+
+```python
+FEED_STORAGES = {
+    'obs': 'scrapy_accessory.feedexporter.ObsFeedStorage',
+}
+HUAWEI_ACCESS_KEY_ID = '<your access key id>'
+HUAWEI_SECRET_ACCESS_KEY = '<your secret access key>'
+HUAWEI_OBS_ENDPOINT = '<your obs bucket endpoint> ex: https://obs.cn-north-4.myhuaweicloud.com'
+```
+
+Output to OBS by obs schema `-o obs://<bucket>/<key>`
+
+### OssFeedStorage
+
+Feed exporter storage backend for ali cloud OSS.
+
+Install oss sdk first
+
+```
+pip install oss2
+```
+
+Configure in settings.py
+
+```python
+FEED_STORAGES = {
+    'oss': 'scrapy_accessory.feedexporter.OssFeedStorage',
+}
+ALI_ACCESS_KEY_ID = '<your access key id>'
+ALI_SECRET_ACCESS_KEY = '<your secret access key>'
+ALI_OSS_ENDPOINT = '<your oss bucket endpoint> ex: https://oss-cn-beijing.aliyuncs.com'
+```
+
+Output to OSS by oss schema `-o oss://<bucket>/<key>`
