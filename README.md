@@ -8,6 +8,7 @@ Useful accessory utilities for [Scrapy](https://scrapy.org/).
 Containing:
 
 - middleware
+- item pipeline
 - feed exporter storage backend
 
 # Installation
@@ -120,3 +121,29 @@ ALI_OSS_ENDPOINT = '<your oss bucket endpoint> ex: https://oss-cn-beijing.aliyun
 ```
 
 Output to OSS by oss schema `-o oss://<bucket>/<key>`
+
+## Item Pipeline
+
+### RedisListPipeline
+
+Export items to redis list.
+
+Install redis first.
+
+```
+pip install redis
+```
+
+Configure in settings.py
+```python
+REDIS_CONNECTION_URL = 'redis://localhost:6379/0'  # required
+REDIS_DEFAULT_QUEUE = 'test'  # use spider's queue attribute to override it
+REDIS_MAX_RETRY = 5  # default 5
+```
+
+Add `scrapy_accessory.pipelines.RedisListPipeline` to your `ITEM_PIPELINES` settings.
+```python
+ITEM_PIPELINES = {
+    'scrapy_accessory.pipelines.RedisListPipeline': 1
+}
+```
